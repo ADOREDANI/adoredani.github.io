@@ -2,72 +2,162 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Proposal 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Proposal</title>
 
 <style>
 body {
-  margin: 0;
-  height: 100vh;
-  background: pink;
-  font-family: Arial, sans-serif;
-  text-align: center;
+    margin: 0;
+    padding: 0;
+    background: #ffdde1;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
-/* Center everything */
+/* Floating Hearts */
+.heart {
+    position: absolute;
+    color: red;
+    font-size: 20px;
+    animation: float 6s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Main Container */
 .container {
-  margin-top: 150px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Text */
 h1 {
-  color: white;
-  font-size: 40px;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 /* Buttons */
 button {
-  padding: 15px 25px;
-  margin: 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
+    padding: 12px 25px;
+    font-size: 18px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
-/* YES button */
-#yes {
-  background-color: red;
-  color: white;
+#yesBtn {
+    background: green;
+    color: white;
 }
 
-/* NO button */
-#no {
-  background-color: white;
-  position: absolute;
+#noBtn {
+    background: red;
+    color: white;
+    position: absolute;
+}
+
+/* Result screen */
+#result {
+    display: none;
+}
+
+#result h1 {
+    font-size: 30px;
+    color: purple;
+}
+
+/* Graffiti background */
+body.success {
+    background: linear-gradient(45deg, pink, purple, yellow, cyan);
+    background-size: 400% 400%;
+    animation: graffiti 3s infinite alternate;
+}
+
+@keyframes graffiti {
+    0% { background-position: left; }
+    100% { background-position: right; }
+}
+
+img {
+    width: 200px;
+    margin-top: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>Will you be mine? 💖</h1>
+<!-- 🔊 Background Music -->
+<audio id="bgMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
 
-  <button id="yes" onclick="yesClicked()">YES 💖</button>
-  <button id="no" onmouseover="moveNo()">NO 😜</button>
+<div class="container" id="main">
+    <h1>PREETI, WILL YOU BE MY VALENTINE? ❤️</h1>
+    <button id="yesBtn">YES 💖</button>
+    <button id="noBtn">NO ❌</button>
+</div>
+
+<div class="container" id="result">
+    <h1>I KNEW YOU LOVE ME 😎❤️</h1>
+    <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" alt="dance">
 </div>
 
 <script>
-function yesClicked() {
-  alert("Yayyyyy 💖 I love you 😍");
+
+/* Start music on first touch (mobile fix) */
+const music = document.getElementById("bgMusic");
+
+function startMusic() {
+    music.play().catch(() => {});
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
 }
 
-function moveNo() {
-  let x = Math.random() * (window.innerWidth - 100);
-  let y = Math.random() * (window.innerHeight - 50);
-  document.getElementById("no").style.left = x + "px";
-  document.getElementById("no").style.top = y + "px";
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
+
+/* Floating hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
 }
+setInterval(createHeart, 300);
+
+/* NO button escape */
+const noBtn = document.getElementById("noBtn");
+
+function moveNo() {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+/* YES button */
+document.getElementById("yesBtn").onclick = function() {
+    music.play(); // ensure music plays
+    document.getElementById("main").style.display = "none";
+    document.getElementById("result").style.display = "block";
+    document.body.classList.add("success");
+};
+
 </script>
 
 </body>
